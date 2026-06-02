@@ -3,8 +3,8 @@
 % conditions.
 %
 % Output:
-% A 3-by-2 figure showing shaded surface reconstruction results. The left
-% column shows four-step PSP, and the right column shows HiFi-DPSP.
+% A 2-by-3 figure showing shaded surface reconstruction results. The first
+% row shows four-step PSP, and the second row shows HiFi-DPSP.
 %
 % Notes:
 % The optical-flow and disparity maps loaded by this script are precomputed
@@ -52,7 +52,7 @@ mProjector = sProjector.mProjector;
 
 %% Compare HiFi-DPSP and traditional four-step phase shifting for dynamic 3D scanning
 figResult = figure;
-set(figResult, 'Position', [0 0 1100 1000]);
+set(figResult, 'Position', [0 0 1400 850]);
 
 for iExp = 1:numel(vsFolder)
     vmIL_Raw = zeros(iCameraHeight, iCameraWidth, iImageNum + 2);
@@ -103,24 +103,24 @@ for iExp = 1:numel(vsFolder)
     vZlim = [cMin, cMax];
 
     figure(figResult);
-    axFourStep = subplot(3, 2, 2*(iExp - 1) + 1);
+    axFourStep = subplot(2, 3, iExp);
     Func_RenderTriSurface(axFourStep, mX_FourStep, mY_FourStep, mZ_FourStep, vClim, vXlim, vYlim, vZlim, fMaxTriangleEdge);
-    ylabel(axFourStep, vsMotionLabel{iExp}, 'FontSize', 18, 'FontWeight', 'bold', 'Color', 'black');
+    title(vsMotionLabel{iExp}, 'FontSize', 20, 'FontWeight', 'bold');
     if iExp == 1
-        title('4-Step PSP', 'FontSize', 20, 'FontWeight', 'bold');
+        ylabel(axFourStep, '4-Step PSP', 'FontSize', 18, 'FontWeight', 'bold', 'Color', 'black');
     end
 
-    axHiFiDPSP = subplot(3, 2, 2*(iExp - 1) + 2);
+    axHiFiDPSP = subplot(2, 3, iExp + numel(vsFolder));
     Func_RenderTriSurface(axHiFiDPSP, mX_HiFiDPSP, mY_HiFiDPSP, mZ_HiFiDPSP, vClim, vXlim, vYlim, vZlim, fMaxTriangleEdge);
     if iExp == 1
-        title('HiFi-DPSP', 'FontSize', 20, 'FontWeight', 'bold');
+        ylabel(axHiFiDPSP, 'HiFi-DPSP', 'FontSize', 18, 'FontWeight', 'bold', 'Color', 'black');
     end
     drawnow;
 end
 
 hColorbarAxis = axes('Visible', 'off');
 colormap(hColorbarAxis, jet);
-cbDepth = colorbar(hColorbarAxis, 'Position', [0.92 0.168 0.016 0.7], 'FontSize', 20, 'FontWeight', 'bold');
+cbDepth = colorbar(hColorbarAxis, 'Position', [0.92 0.18 0.016 0.68], 'FontSize', 20, 'FontWeight', 'bold');
 set(get(cbDepth, 'Title'), 'String', 'mm', 'FontWeight', 'bold', 'FontSize', 20, 'Color', 'black');
 set(cbDepth, 'FontWeight', 'bold', 'FontSize', 20, 'Color', 'black');
 caxis(hColorbarAxis, [cMin, cMax]);
